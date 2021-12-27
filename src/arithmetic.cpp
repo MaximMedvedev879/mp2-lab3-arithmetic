@@ -25,6 +25,7 @@ int DeterminationType(char s) //type1-цифра; type2-буква ; type3-зн�
 void ProcessingUnaryMinus(char* s, char* res) //обработка унарного минуса
 {
 	int len = strlen(s);
+	bool isOpen = false;
 	int j = 0;
 	int type[256];
 	for (int i = 0; i < len; i++)
@@ -46,22 +47,44 @@ void ProcessingUnaryMinus(char* s, char* res) //обработка унарно�
 	{
 		if (s[i] == '-')
 		{
-			if ((s[i - 1] == '(') && ((type[i + 1] == 1) || (type[i + 1] == 2)))
+			if ((s[i - 1] == '(' || type[i - 1] == 3) && ((type[i + 1] == 1) || (type[i + 1] == 2) || s[i + 1] == '\0'))
 			{
+				res[j] = '(';
+				j++;
 				res[j] = '0';
 				j++;
 				res[j] = '-';
 				j++;
+				isOpen = true;
 			}
+			
+					
 		}
+        else 
+		if (isOpen && type[i] == 3) 
+		{
+				res[j] = ')';
+				j++;
+				res[j] = s[i];
+				j++;
+				isOpen = false;
+		}
+		
 		else
 		{
 			res[j] = s[i];
 			j++;
-		}
+			
+		}	
+	}
+	if (isOpen) {
+		res[j] = ')';
+		j++;
+		isOpen = false;
 	}
 	res[j] = '\0';
 }
+	
 bool ThereIsUnaryMinus(char* s)// проверка на наличие унарного минуса
 {
 	int i = 1;
@@ -77,7 +100,7 @@ bool ThereIsUnaryMinus(char* s)// проверка на наличие унар�
 	{
 		if (s[i] == '-')
 		{
-			if ((s[i - 1] == '(') && ((type[i + 1] == 1) || (type[i + 1] == 2)))
+			if ((s[i - 1] == '(' || type[i - 1] == 3) && ((type[i + 1] == 1) || (type[i + 1] == 2)))
 			{
 				flag = 1;
 				break;
