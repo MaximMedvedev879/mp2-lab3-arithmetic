@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <string>
+#include <map>
 #include "../include/arithmetic.h"
 
 using namespace std;
@@ -399,10 +400,11 @@ void FindVars(const char* s, int* res)//нахождение переменны�
 			j++;
 		}
 }
-bool CheckCorrecnessOfValuesOfVars(char* s) // проверка на то, что вместо значений не введены какие-то знаки, пробелы, скобки и тп
+
+bool CheckCorrecnessOfValuesOfVars(string s) // проверка на то, что вместо значений не введены какие-то знаки, пробелы, скобки и тп
 {
 	int flag = 0;
-	int len = strlen(s);
+	int len = s.size();
 	int type[256];
 	for (int i = 0; i < len; i++)
 		type[i] = DeterminationType(s[i]);
@@ -424,8 +426,12 @@ bool CheckCorrecnessOfValuesOfVars(char* s) // проверка на то, чт�
 			break;
 		}
 	}
-	if (CheckPlaceDotsOrCommas(s) != true)
+	char* ca = new char[s.size() + 1];
+	std::copy(s.begin(), s.end(), ca);
+	ca[s.size()] = '\0';
+	if (CheckPlaceDotsOrCommas(ca) != true)
 		flag = 1;
+	delete[] ca;
 	if (flag == 0)
 		return true;
 	else
@@ -434,6 +440,7 @@ bool CheckCorrecnessOfValuesOfVars(char* s) // проверка на то, чт�
 
 void InputValues(char* s, char* res) //функция для ввода значений переменных
 {
+	map<char, string> vars; 
 	int* num;
 	int Size = 256;
 	int i = 0; int m = 0;
@@ -458,14 +465,25 @@ void InputValues(char* s, char* res) //функция для ввода знач
 			int j = 0;
 			while (flag == 1)
 			{
-				cout << s[num[i]] << "=";
-				gets_s(str);
+				if(vars[s[num[i]]].empty())
+				{
+					cout << s[num[i]] << "=";
+					gets_s(str);
+					
+				}
+				else
+				{
+					std::copy(vars[s[num[i]]].begin(), vars[s[num[i]]].end(), str);
+					str[vars[s[num[i]]].size()] = '\0';
+				}
+			
 				if (CheckCorrecnessOfValuesOfVars(str) != true)
 				{
 					cout << "The value is incorrect! Enter the value again " << endl;
 				}
 				else
 				{
+					vars[s[num[i]]] = string(str);
 					if (str[0] == '-')
 					{
 						res[m] = '0';
