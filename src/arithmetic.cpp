@@ -25,7 +25,7 @@ int DeterminationType(char s) //type1-цифра; type2-буква ; type3-зн�
 void ProcessingUnaryMinus(char* s, char* res) //обработка унарного минуса
 {
 	int len = strlen(s);
-	bool isOpen = false;
+	TStack <bool> isOpen;
 	int j = 0;
 	int type[256];
 	for (int i = 0; i < len; i++)
@@ -47,7 +47,7 @@ void ProcessingUnaryMinus(char* s, char* res) //обработка унарно�
 	{
 		if (s[i] == '-')
 		{
-			if ((s[i - 1] == '(' || type[i - 1] == 3) && ((type[i + 1] == 1) || (type[i + 1] == 2) || s[i + 1] == '\0'))
+			if ((s[i - 1] == '(' || type[i - 1] == 3) && ((type[i + 1] == 1) || (type[i + 1] == 2) || s[i + 1] == '\0' || s[i+1] == '-'))
 			{
 				res[j] = '(';
 				j++;
@@ -55,19 +55,22 @@ void ProcessingUnaryMinus(char* s, char* res) //обработка унарно�
 				j++;
 				res[j] = '-';
 				j++;
-				isOpen = true;
+				isOpen.Push(true);
 			}
-			
-					
+			else              
+			{                 
+				res[j] = '-'; 
+				j++;          
+			}              		
 		}
         else 
-		if (isOpen && type[i] == 3) 
+		if(!isOpen.IsEmpty() && type[i] == 3)
 		{
 				res[j] = ')';
 				j++;
 				res[j] = s[i];
 				j++;
-				isOpen = false;
+				isOpen.Pop();
 		}
 		
 		else
@@ -77,10 +80,11 @@ void ProcessingUnaryMinus(char* s, char* res) //обработка унарно�
 			
 		}	
 	}
-	if (isOpen) {
+	while(!isOpen.IsEmpty()) 
+	{
 		res[j] = ')';
 		j++;
-		isOpen = false;
+		isOpen.Pop();
 	}
 	res[j] = '\0';
 }
@@ -211,9 +215,9 @@ bool CheckOperationsInRow(char* s)//проверка на кол-во опера
 	int flag = 0;
 	for (int i = 0; i < len - 1; i++)
 	{
-		if (IsOperation(s[i]))
+		if (IsOperation(s[i])  && s[i] != '-')
 		{
-			if (IsOperation(s[i + 1]))
+			if (IsOperation(s[i + 1])  && s[i] != '-')
 			{
 				cout << "Two operation signs in a row on the positions " << i + 1 << " and " << i + 2 << endl;
 				flag = 1;
