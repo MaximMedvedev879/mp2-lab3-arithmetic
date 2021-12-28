@@ -97,16 +97,18 @@ TEST(Arithmetic, can_process_unary_minus_at_the_beginning)
 
 TEST(Arithmetic, can_process_unary_minus_after_open_bracket)
 {
-	char str[] = "1+(-2)";
+	char str[] = "1+(-2)"; 
 	char newstr[256];
 	ProcessingUnaryMinus(str, newstr);
 	EXPECT_EQ('1', newstr[0]);
 	EXPECT_EQ('+', newstr[1]);
 	EXPECT_EQ('(', newstr[2]);
-	EXPECT_EQ('0', newstr[3]);
-	EXPECT_EQ('-', newstr[4]);
-	EXPECT_EQ('2', newstr[5]);
-	EXPECT_EQ(')', newstr[6]);
+	EXPECT_EQ('(', newstr[3]); 
+	EXPECT_EQ('0', newstr[4]);
+	EXPECT_EQ('-', newstr[5]);
+	EXPECT_EQ('2', newstr[6]);
+	EXPECT_EQ(')', newstr[7]);
+	EXPECT_EQ(')', newstr[8]);
 }
 
 TEST(Arithmetic, can_get_number)
