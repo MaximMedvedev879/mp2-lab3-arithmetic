@@ -29,7 +29,7 @@ int Prioritet(char s);
 bool IsSign(char s);
 bool IsOperation(char s);
 void FindVars(const char* s, int* res);
-bool CheckCorrecnessOfValuesOfVars(char* s);
+bool CheckCorrecnessOfValuesOfVars(string s);
 void InputValues(char* s, char* res);
 double GetNumber(char* s);
 
